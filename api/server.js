@@ -10,7 +10,7 @@ server.use(express.json())
 
 server.use('/api/projects', projectRouter);
 server.use('/api/resources', resourceRouter);
-// server.use('/api/tasks', taskRouter);
+server.use('/api/tasks', taskRouter);
 
 server.use('*', (req, res) => {
     res.json("Catch all server is working in server.js")

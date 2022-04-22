@@ -11,7 +11,9 @@ const project_resources = [
 ]
 
 const tasks = [
-    { task_id: 1, task_description: 'think' }
+    { task_id: 1, task_description: 'think', project_id: 1 },
+    { task_id: 2, task_description: 'think again', project_id: 1 },
+    { task_id: 3, task_description: 'watch a video', project_id: 1 }
 ]
 
 exports.seed = async function (knex) {

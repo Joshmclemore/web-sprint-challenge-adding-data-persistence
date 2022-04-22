@@ -1,7 +1,10 @@
 // build your `/api/resources` router here
-// build your `/api/projects` router here
+
 const router = require('express').Router()
 const Model = require('./model.js')
+const db = require('../../data/dbConfig')
+
+// middleware is here
 
 const validateBody = (req, res, next) => {
     const { resource_name } = req.body
@@ -14,6 +17,27 @@ const validateBody = (req, res, next) => {
     }
 }
 
+const checkName = async (req, res, next) => {
+    try {
+      const existing = await db('resources')
+        .where('resource_name', req.body.resource_name)
+        .first()
+  
+      if(existing) {
+        next({
+          status:400,
+          message: `resource with resource_name, "${req.body.resource_name}" is already taken`
+        })
+      } else {
+        next()
+      }
+    } catch(err) {
+      next(err)
+    }
+  }
+
+// requests are here
+
 router.get('/', (req, res, next) => {
     Model.getAll()
         .then(resources => {
@@ -22,7 +46,7 @@ router.get('/', (req, res, next) => {
         .catch(next)
 })
 
-router.post('/', validateBody, (req, res, next) => {
+router.post('/', validateBody, checkName, (req, res, next) => {
     const newResource = req.body
     Model.create(newResource)
       .then(newResource => {
